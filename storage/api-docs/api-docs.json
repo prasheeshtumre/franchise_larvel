@@ -1,0 +1,1230 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My API",
+        "description": "This is a simple API for demonstration purposes",
+        "termsOfService": "http://example.com/terms",
+        "contact": {
+            "email": "support@example.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Login",
+                "description": "Authenticates a user and returns a JWT token if successful.",
+                "operationId": "3673edffcdc18c06ac5aef5e2219d774",
+                "requestBody": {
+                    "description": "Login details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "your_jwt_token_here"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "user_details": {
+                                            "type": "object",
+                                            "example": "User Details"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error or missing parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The provided credentials are incorrect"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Email not verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email not verified. Please verify your email."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User Registration",
+                "description": "Register a new user and send email verification link",
+                "operationId": "748a1acc92fb3e56f8f6ace55b5a9d24",
+                "requestBody": {
+                    "description": "User registration details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "last_name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User successfully registered and email verification link sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully! Please check your email for the verification link."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "Data"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User creation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Not Created"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/registration/store_franchisor_details": {
+            "post": {
+                "tags": [
+                    "Franchisor"
+                ],
+                "summary": "Store or update franchisor details",
+                "description": "Create or update franchisor details for a given user in multiple steps.",
+                "operationId": "0ca29320ac4b8e72761acc12c36c322a",
+                "requestBody": {
+                    "description": "Franchisor details for user",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "step",
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "step": {
+                                        "description": "The step of the process",
+                                        "type": "string",
+                                        "enum": [
+                                            "step1",
+                                            "step2",
+                                            "step3"
+                                        ]
+                                    },
+                                    "user_id": {
+                                        "description": "The user ID",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "search_franchisor": {
+                                        "description": "The franchisor search ID, 0 for new franchisor",
+                                        "type": "integer",
+                                        "example": 0
+                                    },
+                                    "franchise_name": {
+                                        "description": "The name of the franchise if creating a new one",
+                                        "type": "string",
+                                        "example": "Franchise X"
+                                    },
+                                    "franchise_location": {
+                                        "description": "The location of the franchise if creating a new one",
+                                        "type": "string",
+                                        "example": "New York"
+                                    },
+                                    "url": {
+                                        "description": "URL of the franchise",
+                                        "type": "string",
+                                        "example": "http://franchise.com"
+                                    },
+                                    "franchisor_industry": {
+                                        "description": "The industry of the franchisor",
+                                        "type": "string",
+                                        "example": "Food & Beverage"
+                                    },
+                                    "investment_range": {
+                                        "description": "Investment range of the franchisor",
+                                        "type": "string",
+                                        "example": "50,000 - 100,000"
+                                    },
+                                    "support_type": {
+                                        "description": "Type of support provided by the franchisor",
+                                        "type": "string",
+                                        "example": "Marketing"
+                                    },
+                                    "hashtag_ids": {
+                                        "description": "List of hashtag IDs related to the franchisor",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Franchisor details successfully stored or updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Franchisor Details created successfully!"
+                                        },
+                                        "data": {
+                                            "example": "Data"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error, missing or incorrect data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to create or update franchisor details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Not Created/updated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/registration/store_franchisee_details": {
+            "post": {
+                "tags": [
+                    "Franchisee"
+                ],
+                "summary": "Store or update franchisee details",
+                "description": "This endpoint stores or updates franchisee details. It handles three steps:\n     *     step 1 for basic franchisee details, step 2 for additional franchisee details, and step 3 for hashtags.",
+                "operationId": "571e3dc672a5671f9a5398ccfb85ab8f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "step"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "step": {
+                                        "type": "string",
+                                        "enum": [
+                                            "step1",
+                                            "step2",
+                                            "step3"
+                                        ],
+                                        "example": "step1"
+                                    },
+                                    "search_franchisee": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "franchisee_name": {
+                                        "type": "string",
+                                        "example": "Franchisee Name"
+                                    },
+                                    "franchisee_location": {
+                                        "type": "string",
+                                        "example": "Franchisee Location"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://franchisee-url.com"
+                                    },
+                                    "franchisee_industry": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "franchisee_investment_range": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "support_type": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "timeline_type": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "franchisee_expert_advice": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "hashtag_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Franchisee details successfully stored or updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Franchisee Details created successfully!"
+                                        },
+                                        "data": {
+                                            "example": "Data"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, failed to store or update franchisee details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Not Created/updated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error in the request body",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/registration/store_buyer_details": {
+            "post": {
+                "tags": [
+                    "Buyer"
+                ],
+                "summary": "Store or update buyer details",
+                "description": "This endpoint stores or updates buyer details. It handles three steps: step 1 for franchise categories, step 2 for additional details, and step 3 for hashtags.",
+                "operationId": "f6ec8d98a5dedabc9e085af7dcf38702",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "step"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "step": {
+                                        "type": "string",
+                                        "enum": [
+                                            "step1",
+                                            "step2",
+                                            "step3"
+                                        ],
+                                        "example": "step1"
+                                    },
+                                    "franchiseCategories": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "franchisee_industry": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "franchisee_investment_range": {
+                                        "type": "integer",
+                                        "example": 50000
+                                    },
+                                    "support_type": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "timeline_type": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "franchisee_expert_advice": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "hashtag_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            3
+                                        ]
+                                    },
+                                    "search_franchisee": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "franchise_name": {
+                                        "type": "string",
+                                        "example": "Franchisee Name"
+                                    },
+                                    "franchise_location": {
+                                        "type": "string",
+                                        "example": "Franchisee Location"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://buyer-url.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Buyer details successfully stored or updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Buyer Details created successfully!"
+                                        },
+                                        "data": {
+                                            "example": "Data"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, failed to store or update buyer details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Not Created/updated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error in the request body",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/registration/store_consultant_details": {
+            "post": {
+                "tags": [
+                    "Consultant"
+                ],
+                "summary": "Store or update consultant details",
+                "description": "This endpoint stores or updates consultant details. It handles step 2 for services, experience, and franchise, and step 3 for hashtags.",
+                "operationId": "c6f1685b5b613831101084687edefe04",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "step"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "step": {
+                                        "type": "string",
+                                        "enum": [
+                                            "step2",
+                                            "step3"
+                                        ],
+                                        "example": "step2"
+                                    },
+                                    "services": {
+                                        "type": "string",
+                                        "example": "Consulting services for franchisees"
+                                    },
+                                    "experience": {
+                                        "type": "string",
+                                        "example": "5 years of experience in franchising"
+                                    },
+                                    "franchise_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "hashtag_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "role_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Consultant details successfully stored or updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consultant details created successfully!"
+                                        },
+                                        "data": {
+                                            "example": "Data"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, failed to store or update consultant details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Not Created/updated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error in the request body",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/registration/get_signup_flow_details/{user_id}": {
+            "get": {
+                "tags": [
+                    "Signup Flow"
+                ],
+                "summary": "Get Signup Flow Details",
+                "description": "Fetches the details from the signup flow for a specific user by user_id. Requires authentication.",
+                "operationId": "e3db8473c45351dc53fe48cbbb0145a0",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "The ID of the user to fetch the signup flow details for.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Signup Flow Details fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get Signup Flow Details fetched successfully!"
+                                        },
+                                        "data": {
+                                            "example": "Data"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to fetch Signup Flow Details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Not fetched"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/testing": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Test Swagger",
+                "description": "A simple test endpoint to verify Swagger integration",
+                "operationId": "2802fad366626877befc20aea333a88e",
+                "responses": {
+                    "200": {
+                        "description": "Test successful swagger",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Test successful swagger"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/verify/{id}/{hash}": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verify user's email",
+                "description": "Verify the user's email address by checking the hash. If the email is already verified, return a message. If verification is successful, log the user in and return an authentication token.",
+                "operationId": "609a685bf3989e27148ff814744358f0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "path",
+                        "description": "Hashed email for verification",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "hash_value_here"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email successfully verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email successfully verified"
+                                        },
+                                        "data": {
+                                            "example": "Data"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "Bearer token_here"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid verification link or failed verification",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid verification link."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Email already verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "verified"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email already verified"
+                                        },
+                                        "data": {
+                                            "example": "Data"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/category/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete a Category (soft delete)",
+                "description": "This endpoint marks a Category as deleted by setting the `is_deleted` field to `1`. It does not remove the Category from the database.",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Category to be deleted",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Category deleted Successfully"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Category not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unable to delete category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unable to delete Category"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/franchises/{id}": {
+            "delete": {
+                "tags": [
+                    "Franchises"
+                ],
+                "summary": "Delete a Franchise (soft delete)",
+                "description": "This endpoint marks a franchise as deleted by setting the `is_deleted` field to `1`. It does not remove the franchise from the database.",
+                "operationId": "deleteFranchise",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the franchise to be deleted",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Franchises deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Franchises deleted Successfully"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Franchises not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Franchises not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unable to delete Franchises",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unable to delete Franchises"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Franchisor",
+            "description": "Franchisor"
+        },
+        {
+            "name": "Franchisee",
+            "description": "Franchisee"
+        },
+        {
+            "name": "Buyer",
+            "description": "Buyer"
+        },
+        {
+            "name": "Consultant",
+            "description": "Consultant"
+        },
+        {
+            "name": "Signup Flow",
+            "description": "Signup Flow"
+        },
+        {
+            "name": "Test",
+            "description": "Test"
+        },
+        {
+            "name": "Category",
+            "description": "Category"
+        },
+        {
+            "name": "Franchises",
+            "description": "Franchises"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}
