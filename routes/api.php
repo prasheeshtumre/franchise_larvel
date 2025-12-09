@@ -18,7 +18,8 @@ use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 // use OpenApi\Annotations as OA;
-// test api's
+// test api's'
+// test commits
 Route::get('/test', function () {
     return 'api route works!';
 });
