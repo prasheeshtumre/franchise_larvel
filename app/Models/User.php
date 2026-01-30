@@ -54,17 +54,44 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function isAdmin(){
+    public function isAdmin()
+    {
         return $this->role_id;
     }
 
-    public function isUser(){
+    public function isUser()
+    {
         return $this->role_id;
     }
 
-    public function user_role(){
-        return $this->hasOne(Role::class,'id','role_id');
+    public function user_role()
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
     }
+    public function posts()
+    {
+        return $this->hasMany(Post::class)->where('is_deleted', 0);
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id')
+            ->wherePivot('is_deleted', 0)
+            ->withTimestamps();
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id')
+            ->wherePivot('is_deleted', 0)
+            ->withTimestamps();
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class)->where('is_deleted', 0);
+    }
+
     public function sendEmailVerificationNotification()
     {
         $this->notify(new CustomVerifyEmailNotification());

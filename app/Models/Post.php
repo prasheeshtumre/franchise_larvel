@@ -19,6 +19,7 @@ class Post extends Model
         'user_id',
         'description',
         'post_files',
+        'is_deleted'
     ];
 
     /**
@@ -36,5 +37,20 @@ class Post extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class)->where('is_deleted', 0);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->where('is_deleted', 0);
+    }
+
+    public function shares()
+    {
+        return $this->hasMany(Share::class)->where('is_deleted', 0);
     }
 }

@@ -13,9 +13,11 @@ use App\Http\Controllers\Hashtag\HashtagController;
 use App\Http\Controllers\Industry\IndustryController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\Users\userController;
+use App\Http\Controllers\Users\FollowController;
 use App\Http\Middleware\AccessApiMiddleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\Post\PostController;
+use App\Http\Controllers\Post\InteractionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 // use OpenApi\Annotations as OA;
@@ -111,7 +113,29 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('get/{id}', [PostController::class, 'show']);
         Route::put('update/{id}', [PostController::class, 'update']);
         Route::delete('delete/{id}', [PostController::class, 'destroy']);
+
+        // Social Interactions
+        Route::post('{id}/like', [InteractionController::class, 'like']);
+        Route::post('{id}/unlike', [InteractionController::class, 'unlike']);
+        Route::post('{id}/comment', [InteractionController::class, 'storeComment']);
+        Route::get('{id}/comments', [InteractionController::class, 'showComments']);
+        Route::post('{id}/share', [InteractionController::class, 'share']);
     });
+
+    Route::prefix('user')->group(function () {
+        Route::post('follow/{id}', [FollowController::class, 'follow']);
+        Route::post('unfollow/{id}', [FollowController::class, 'unfollow']);
+        Route::get('followings', [FollowController::class, 'followings']);
+
+        // Search & Profile
+        Route::get('search', [UserController::class, 'search']);
+        Route::get('profile/{id}', [UserController::class, 'getProfile']);
+        Route::get('{id}/posts', [PostController::class, 'userPosts']);
+    });
+
+    // Standardized Post Routes
+    Route::put('posts/{post}', [PostController::class, 'update']);
+    Route::delete('posts/{post}', [PostController::class, 'destroy']);
 });
 
 Route::get('/test-file', function () {
