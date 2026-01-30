@@ -84,12 +84,12 @@ class LoginController extends Controller
             // }])
             // ->select('*') // Specify the columns you want from the 'users' table
             // ->first();
-             // Issue token with custom expiration time (e.g., 10 minutes)
+            // Issue token with custom expiration time (e.g., 10 minutes)
             //  $token = $user->createToken('franchise', ['*'], now()->addMinutes(10))->plainTextToken;
 
-            if (!$user->hasVerifiedEmail()) {
-                return response()->json(['message' => 'Email not verified. Please verify your email.'], 401);
-            }
+            // if (!$user->hasVerifiedEmail()) {
+            //     return response()->json(['message' => 'Email not verified. Please verify your email.'], 401);
+            // }
             $token = $user->createToken('franchise')->plainTextToken;
 
             $result = [
@@ -102,9 +102,9 @@ class LoginController extends Controller
             //     'token_type' => 'Bearer',
             //     'message' => 'Login successful.',
             // ]);
-           return  $this->successResponse($result,'Login Successfull.');
-        }else{
-            return  $this->errorResponse('The provided credentials are incorrect',401);
+            return $this->successResponse($result, 'Login Successfull.');
+        } else {
+            return $this->errorResponse('The provided credentials are incorrect', 401);
         }
     }
 
@@ -120,10 +120,10 @@ class LoginController extends Controller
         $request->user()->tokens()->delete();
 
         $user = User::where('id', $request->user_id)->first();
-        if($user){
-            return  $this->successResponse($user,'Logged out successfully.');
-        }else{
-            return  $this->errorResponse('The provided credentials are incorrect',401);
+        if ($user) {
+            return $this->successResponse($user, 'Logged out successfully.');
+        } else {
+            return $this->errorResponse('The provided credentials are incorrect', 401);
         }
     }
 }
